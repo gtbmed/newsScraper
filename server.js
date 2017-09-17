@@ -25,7 +25,7 @@ request("https://www.theatlantic.com/latest/", function(error, response, html) {
   $("li.article").each(function(i, element) {
 
     var link = $(element).children().attr("href");
-    var title = $(element).eq(0).children().text();
+    var title = $(element).children().children(".hed").text();
   //  var summary = $(".o-dek").children().text();
 
     // Save these results in an object that we'll push into the results array we defined earlier
