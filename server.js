@@ -1,8 +1,19 @@
-var cheerio = require("cheerio");
-var request = require("request");
+// Dependencies
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+
+// Scraping Tools
+var cheerio = require('cheerio');
+var request = require('request');
+
+//Initialize Express
+const app = express();
+
 
 // Make a request call to grab the HTML body from the site of your choice
-request("https://www.theatlantic.com/", function(error, response, html) {
+request("https://www.theatlantic.com/latest/", function(error, response, html) {
 
 
   var $ = cheerio.load(html);
@@ -11,15 +22,17 @@ request("https://www.theatlantic.com/", function(error, response, html) {
   var results = [];
 
 
-  $("h3.o-hed").each(function(i, element) {
+  $("li.article").each(function(i, element) {
 
     var link = $(element).children().attr("href");
-    var title = $(element).children().text();
+    var title = $(element).eq(0).children().text();
+  //  var summary = $(".o-dek").children().text();
 
     // Save these results in an object that we'll push into the results array we defined earlier
     results.push({
       title: title,
-      link: link
+      link: link//,
+      //summary: summary
     });
   });
 
