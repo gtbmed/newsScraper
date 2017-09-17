@@ -4,6 +4,9 @@ const exphbs = require("express-handlebars");
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+// Require our Articles and Comments Models
+const Articles = require("./models/Articles.js");
+const Comments = require("./models/Comments.js");
 
 // Scraping Tools
 var cheerio = require('cheerio');
