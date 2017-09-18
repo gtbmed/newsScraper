@@ -15,31 +15,37 @@ var request = require('request');
 //Initialize Express
 const app = express();
 
+// Initiate body-parser for the app
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
-// Make a request call to grab the HTML body from the site of your choice
-request("https://www.theatlantic.com/latest/", function(error, response, html) {
+// Express-Handlebars
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
+// Make public a static dir
+app.use(express.static("public"));
 
-  var $ = cheerio.load(html);
+// if else statement to use localhost if not being hoseted on Herko
+//  Seemed helpful for development without having to switch code repeatedly
+// credit to davesrose for the if/else setup
+if(process.env.NODE_ENV == 'production'){
 
+  mongoose.connect('mongodb://heroku_cslh0zn6:4ng0b98nh1j97mpffs421eqb1l@ds139954.mlab.com:39954/heroku_cslh0zn6');
+}
+else{
+  mongoose.connect('mongodb://localhost/newsScraper');
+}
 
-  var results = [];
+const db = mongoose.connection;
 
+// Show any Mongoose errors
+db.on('error', function(err) {
+  console.log('Mongoose Error: ', err);
+});
 
-  $("li.article").each(function(i, element) {
-
-    var link = $(element).children().attr("href");
-    var title = $(element).children().children(".hed").text();
-  //  var summary = $(".o-dek").children().text();
-
-    // Save these results in an object that we'll push into the results array we defined earlier
-    results.push({
-      title: title,
-      link: link//,
-      //summary: summary
-    });
-  });
-
-  // Log the results once you've looped through each of the elements found with cheerio
-  console.log(results);
+// Once logged in to the db through mongoose, log a success message
+db.once('open', function() {
+  console.log('Mongoose connection successful.');
 });
