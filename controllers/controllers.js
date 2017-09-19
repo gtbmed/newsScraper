@@ -41,4 +41,19 @@ app.get("/scrape", function(req, res) {
     // Log the results once you've looped through each of the elements found with cheerio
     console.log(results);
   });
-})
+});
+
+// Get the articles by article ID and populate
+app.get("/articles/:id", function(req, res) {
+  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db
+  Article.findOne({ "_id": req.params.id })
+  .populate("note")
+  .exec(function(error, doc) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      res.json(doc);
+    }
+  });
+});
