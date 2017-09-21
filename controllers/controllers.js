@@ -47,7 +47,7 @@ app.get("/scrape", function(req, res) {
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db
   Article.findOne({ "_id": req.params.id })
-  .populate("note")
+  .populate("Comments")
   .exec(function(error, doc) {
     if (error) {
       console.log(error);
