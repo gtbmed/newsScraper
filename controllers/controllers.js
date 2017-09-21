@@ -43,7 +43,7 @@ app.get("/scrape", function(req, res) {
   });
 });
 
-// Get the articles by article ID and populate
+// Get the articles by article ID and populate with the comments
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db
   Article.findOne({ "_id": req.params.id })
@@ -54,6 +54,35 @@ app.get("/articles/:id", function(req, res) {
     }
     else {
       res.json(doc);
+    }
+  });
+});
+
+app.post("/articles/:id", function(req, res) {
+  // Create a new comment and pass the req.body to the entry
+  var newComment = new Comments(req.body);
+
+  // And save the comment to the db
+  newNote.save(function(error, doc) {
+    // Log any errors
+    if (error) {
+      console.log(error);
+    }
+    // Otherwise
+    else {
+      // Use the article id to find and update it's note
+      Articles.findOneAndUpdate({ "_id": req.params.id }, { "Comments": doc._id })
+      // Execute the above query
+      .exec(function(err, doc) {
+        // Log any errors
+        if (err) {
+          console.log(err);
+        }
+        else {
+          // Or send the document to the browser
+          res.send(doc);
+        }
+      });
     }
   });
 });
