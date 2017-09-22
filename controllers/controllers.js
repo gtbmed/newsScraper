@@ -86,3 +86,6 @@ app.post("/articles/:id", function(req, res) {
     }
   });
 });
+
+// Export Router to server.js
+module.exports = router;
