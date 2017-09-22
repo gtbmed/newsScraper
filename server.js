@@ -49,3 +49,14 @@ db.on('error', function(err) {
 db.once('open', function() {
   console.log('Mongoose connection successful.');
 });
+
+// Import Routes/Controller
+const router = require('./controllers/controller.js');
+app.use('/', router);
+
+
+// Launch App
+const port = process.env.PORT || 3000;
+app.listen(port, function(){
+  console.log('Running on port: ' + port);
+});
