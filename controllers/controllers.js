@@ -47,6 +47,18 @@ app.get("/scrape", function(req, res) {
   });
 });
 
+//Route to get all of the scraped articles
+app.get("/articles", function (req, res) {
+  Articles.Find({}, function (error, doc) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      res.json(doc);  //Send as JSON for front end to populate
+    }
+  });
+});
+
 // Get the articles by article ID and populate with the comments
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db
