@@ -42,7 +42,7 @@ app.get("/scrape", function(req, res) {
           console.log(doc);
         }
       });
-    // Go back to the home page
+    // Go back to the home page...or should we redirect to /articles after the scrape
     res.redirect('/')
   });
 });
@@ -67,7 +67,7 @@ app.post("/articles/:id", function(req, res) {
   var newComment = new Comments(req.body);
 
   // And save the comment to the db
-  newNote.save(function(error, doc) {
+  newCommment.save(function(error, doc) {
     // Log any errors
     if (error) {
       console.log(error);
