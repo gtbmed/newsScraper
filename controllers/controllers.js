@@ -15,31 +15,35 @@ var cheerio = require('cheerio');
 var request = require('request');
 
 
-// Scrape Routee
+// Scrape Route
 app.get("/scrape", function(req, res) {
   // Make a request call to grab the HTML body from the site of your choice
   request("https://www.theatlantic.com/latest/", function(error, response, html) {
 
     var $ = cheerio.load(html);
 
-    var results = [];
-
+    var result = {};
+    // Look for the specified clas
     $("li.article").each(function(i, element) {
+      // grab the link
+      result.link = $(element).children().attr("href");
+      // Grabbing the title requires going for the child of the child with class .hed
+      result.title = $(element).children().children(".hed").text();
 
-      var link = $(element).children().attr("href");
-      var title = $(element).children().children(".hed").text();
-    //  var summary = $(".o-dek").children().text();
+      //Use the Articles Model to add each new article
+      var newArt = new Articles(result);
 
-      // Save these results in an object that we'll push into the results array we defined earlier
-      results.push({
-        title: title,
-        link: link//,
-        //summary: summary
+      //Add the new Article to the DB.  This will give it a unique ID.  Using array would have only given the array the ID, not the entry
+      newArt.save(function(error, doc){
+        if (error) {
+          console.log(error);
+        }
+        else {
+          console.log(doc);
+        }
       });
-    });
-
-    // Log the results once you've looped through each of the elements found with cheerio
-    console.log(results);
+    // Go back to the home page
+    res.redirect('/')
   });
 });
 
